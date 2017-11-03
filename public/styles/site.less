@@ -1,0 +1,135 @@
+@color-main: #5d5c61;
+@color-secondary: #938e94;
+@color-tertiary: #7395ae;
+@color-quartiery: #e8a87c;
+@color-quitianary: #c38d9d;
+
+html {
+    height:100%;
+}
+
+body { 
+    height:100%;
+    overflow-x:hidden;
+    background-color:@color-main;
+}
+
+.rejoinder {font-family: 'Marck Script', cursive; font-size: 7rem;}
+
+.main-navbar {
+    width:100%;
+    margin-bottom: 0px;
+    background-color: @color-secondary;
+    z-index: 50;
+    min-height:35px;
+    
+    .navbar-header {
+        padding:20px;
+        width:100%;
+    }
+    
+    .page-nav {
+        
+        .account-bar {
+
+            .profile-img {
+                width: 60px;
+                border-radius: 35px;
+                margin: 3px;
+            }
+        }
+    }
+}
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+.clearfix { display: inline-block; }
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+
+.container {
+    top: 85px;
+    position: relative;
+}
+
+.main-content {
+    position: relative;
+    width:90%;
+    margin:0 auto;
+}
+
+.jumbotron-title {
+    background: rgba(100, 100, 100, .2);
+    color:white;
+}
+
+.btn-transparent {
+    background-color: transparent;
+}
+
+.account-buttons li {
+    margin-right:10px;
+}
+
+.account-buttons li a {
+    width:100px;
+}
+
+.dash-menu {
+    background-color: @color-secondary;
+    color: #f5f5f5;
+    position: fixed;
+    left: 0;
+    height: 100%;
+    padding: 20px;
+} 
+
+.hash-search {
+    
+    font-size: 40px;
+    position: relative;
+    top: 15px;    
+    .form-group {
+        .input-group {
+            width:100%;
+            input {
+                height:53px;
+            }
+            .bootstrap-tagsinput {
+                border-radius: 0 4px 4px 0;
+                width:100%;
+            }
+            .input-group-addon{
+                width: 55px;
+                font-size: 40px;
+                
+            }
+            
+        }
+    }
+}
+
+footer {
+    color:white;
+    position:absolute;
+    bottom:1%;
+    dt, dd { 
+        float: left; 
+        margin-right:5px;
+    }
+    dt { 
+        clear:both;
+        width:65px;
+    }       
+}
+
+@import "thermometer";
+@import "igPost";
+@import "ticker";
+

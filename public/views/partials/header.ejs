@@ -1,0 +1,33 @@
+
+
+
+<nav class="main-navbar navbar" role="navigation">
+    <div class="container-fluid">
+
+        <div class="navbar-header page-nav">
+            <a class="navbar-brand title" href="#">
+                <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
+                Rejoinder
+            </a>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+            
+            
+            <% if (locals.name) { %>
+                <ul class="account-bar nav navbar-nav pull-right">
+                    <li><img class="profile-img" src="<%= locals.user_profile_img_url %>" /></li>
+                    <li><%= locals.user_name %></li>
+                </ul>
+            <% } else{ %>
+            <ul class="account-buttons nav navbar-nav pull-right">
+                <li><a href="signup" class="btn btn-primary btn-transparent">Sign up</a></li>
+                 <li><a href="login" class="btn btn-primary btn-transparent">login</a></li>
+            </ul>
+            <% } %>
+        </div>
+
+    </div>
+</nav>
+

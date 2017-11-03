@@ -1,0 +1,10 @@
+{   
+    "ignore": [
+        "build/**/*.js", 
+        "build/**/*.css",
+        "public/**/*.css",
+        "public/**/*.less",
+        "public/**/*.js",
+        "README"
+    ] 
+}
