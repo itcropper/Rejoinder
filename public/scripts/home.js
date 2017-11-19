@@ -113,21 +113,23 @@
         }
 
         runCommenting(){
-            this.$currentPost = this.$currentPost || this.$root.find('.ig-content-window').find('.post-container').first();
-            let $textArea = this.$currentPost.find('textarea');
-            setTimeout(() => {
-                $textArea.focus();
-            }, 50)
             
-
-            this.$currentPost.removeClass('hidden');
+            let $textArea = this.$currentPost.find('textarea');
+            
+            this.$root.find('.hash-search').addClass('remove');
+            
+            ///TODO: put something in the way here, then remove it when everything is in place.
             setTimeout(() => {
                 var postHeight = this.$currentPost.height();
-                console.log(postHeight);
 
                 this.$currentPost.find('.side-details .comments').css({"min-height":`${postHeight / 4}px`, "max-height": `${(postHeight / 3)}px` });
                 this.$currentPost.find('textarea').css("min-height",`${postHeight / 2}px`);
-            },500);///TODO come back to this. Adding more animation will make this more seamless
+                
+                setTimeout(() => {
+                    $textArea.focus();
+                }, 50)
+                
+            },50);///TODO come back to this. Adding more animation will make this more seamless
 
 
             $textArea.on('keydown', (e) => {
@@ -143,6 +145,13 @@
             $textArea.keyup((e) => {
                 this.updateQualityStick($(e.currentTarget).val());
             });
+        }
+        
+        preCommenting(next){
+            this.$currentPost = this.$currentPost || this.$root.find('.ig-content-window').find('.post-container').first();
+            this.$therm.removeClass('hidden');
+            this.$currentPost.removeClass('hidden');///TODO: Animate these parts as well.
+            setTimeout(next, 1500);
         }
 
         submitComment(comment){//animate this stuff;
@@ -196,7 +205,7 @@
                     });
                     $contentRoot.html($images.join(''));
 
-                    this.runCommenting();
+                    this.preCommenting(this.runCommenting.bind(this));
 
     //                $('.tag-contents').slick({
     //                    variableWidth: true

@@ -1,50 +1,45 @@
-var passport = require('passport'),
-    util = require('util'),
-    User = require('../models/UserModel'),
-    igApi = require('../data/instagram'),
-    InstagramStrategy = require('passport-instagram').Strategy;
-
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var User = require('../models/UserModel');
 
 passport.serializeUser(function(user, done) {
-    done(null, user);
+  done(null, user);
 });
 
-passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user){
-        if(err) return done(err);
-        return done(null, user);
-    })
-  
+passport.deserializeUser(function(user, done) {
+  done(null, user);
 });
 
+passport.use(new LocalStrategy({
+    passReqToCallback: true
+},
+  function(req, username, password, callback) {
+      console.log("---->", req.cookies);
+    User.findOne({ user_name: username }, function (err, user) {
+      if (err) { return callback(err); }
 
-passport.use(new InstagramStrategy({
-    clientID: process.env.client_id,
-    clientSecret: process.env.client_secret,
-    callbackURL: process.env.redirect_uri
-  },
-  function(accessToken, refreshToken, profile, done) {
-    User.find({account_token: accessToken}, function(err, user){
-        if(err){return done(err);}
-        if(!user || user.length == 0){
-            
-            igApi.createNewUser(accessToken, (err, user) => {
-                if(err){return done(err);}
-                return done(null, user);
-            });
-        }
-        return done(null, user);
+      // No user found with that username
+      if (!user) { return callback(null, false); }
+
+      // Make sure the password is correct
+      user.verifyPassword(password, function(err, isMatch) {
+          
+        if (err) { return callback(err); }
+          
+        // Password did not match
+        if (!isMatch) { return callback(null, false); }
+
+        console.log('success: ', !!isMatch);
+        // Success
+          req.login(user, (error) => {
+              if(error) return callback(err, false);
+              return callback(null, user);
+          });
+      });
     });
   }
 ));
 
-module.exports = passport;
+passport.isAuthenticated = passport.authenticate('local', { session : true });
 
-/*
-    user_name:String,
-    user_profile_img_url: String,
-    user_id: String,
-    account_token: String,
-    created_at: {type: Date, default: Date.now},
-    last_signed_in:{type: Date, default: Date.now},
-*/
+module.exports = passport;

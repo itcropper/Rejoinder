@@ -12,11 +12,10 @@ var express = require('express'),
     ig = require('./data/instagram'),
     http = require('http').createServer(app),
     mongo = require('mongoose'),
-    passport = require('passport'),
-    cParser = require('cookie-parser'),
-    router = require('./router'),
-    session = require('express-session'),
-    bodyParser = require('body-parser');
+    passport = require('./auth/passport'),
+    guid = require('./guid'),
+    bodyParser = require('body-parser'),
+    session = require('express-session');
 
 
 var PORT = process.env.PORT || 8000,
@@ -34,26 +33,25 @@ mongo.connect(MONGOOSE_PORT, function (err, res) {
   }
 });
 
-app.use(session({
-  key: "mysite.sid.uid.whatever",
-  secret: process.env["SESSION_SECRET"],
-  cookie: {
-    maxAge: 2678400000 // 31 days
-  }  
-}));
+app.use('/static', express.static(path.join(__dirname, 'build')))
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.set('view engine', 'ejs');
+app.use(
+    session(
+        { 
+          secret: guid(),
+          saveUninitialized: true,
+          resave: true
+        }
+    )
+);
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cParser());
-app.enable('trust proxy'); // add this line
-
-app.use('/static', express.static(path.join(__dirname, 'build')))
-app.set('view engine', 'ejs');
-
-
-router = new router(app);
-
+require('./router')(app);
 
 app.listen(PORT, function(){
     console.log(`Listening on 127.0.0.1/${PORT}`);
 });
+
+console.log("TIME::----> " + new Date().toLocaleString());

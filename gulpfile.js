@@ -16,7 +16,7 @@ var paths = {
       'public/scripts/**/dist/*.min.js',
       'public/scripts/vendor/*.js',
       'public/scripts/utilities/*.js',
-      'public/scripts/home.js'
+      'public/scripts/*.js'
   ],
   images: [
       'public/images/**/*.png', 

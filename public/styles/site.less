@@ -54,7 +54,6 @@ body {
 .clearfix { display: block; }
 
 .container {
-    top: 85px;
     position: relative;
 }
 
@@ -62,15 +61,42 @@ body {
     position: relative;
     width:90%;
     margin:0 auto;
+    height:50%;
+    .main_container {
+        height:100%;
+        .hash-search {
+            position: relative;
+            height:80%;
+            opacity: 1;
+            &.remove {
+                height:0;
+                opacity: 0;
+                transition: all 1s ease-in-out;
+            }
+            .form-group {
+                position: absolute;
+                bottom:0px;
+
+            }
+        }
+        
+        .ig-content-window {
+            position: relative;
+            top: 25%;
+        }
+    }
 }
 
 .jumbotron-title {
-    background: rgba(100, 100, 100, .2);
+    background-color:transparent;
     color:white;
 }
 
 .btn-transparent {
     background-color: transparent;
+}
+.btn-dark {
+    color:black;
 }
 
 .account-buttons li {
@@ -115,9 +141,54 @@ body {
     }
 }
 
+hr {
+    border-width: 3px;
+}
+
+   input[type='checkbox'].pretty-checkbox{
+      
+        position: relative;
+        margin: 20px;
+        bottom: 5px;
+
+        &::before {
+            content: " ";
+            display: block;
+            border: 1px solid grey;
+            width: 25px;
+            height: 25px;
+            position: absolute;
+            background-color: white;
+            border-radius: 2px;
+        }
+        &:disabled::before {
+            background-color: #D0D0D0;
+        }      
+
+        &:checked::after {
+            content: " ";
+            border: 2px solid transparent;
+            border-bottom-color: #1574B1;
+            height: 10px;
+            width: 20px;
+            position: absolute;
+            top: 5px;
+            left: 2px;
+            border-left-color: #128ad6;
+            background: transparent;
+            -webkit-transform: rotate(-45eg);
+            -ms-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+        &:disabled::after {
+            border-bottom-color: #666666;
+            border-left-color: #666666;
+        }
+    }
+
 footer {
     color:white;
-    position:absolute;
+    position:fixed;
     bottom:1%;
     dt, dd { 
         float: left; 
@@ -129,6 +200,9 @@ footer {
     }       
 }
 
+
+@import "splash";
+@import "signup";
 @import "thermometer";
 @import "igPost";
 @import "ticker";

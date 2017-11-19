@@ -3,6 +3,45 @@
 <!-- Header -->
 <% include ./partials/header %>
 
+
+<div class="container signup-container">
+    <div class="jumbotron jumbotron-title">
+        <h1 class="text-center">Welcome to <span class='rejoinder'>Rejoinder</span></h1>
+        <h2>Sign up</h2>
+        <form>
+          <div class="form-group">
+              <span data-bind="visible: badUsername, text: badUsername"></span>
+            <input type="text" data-bind="value: username, valueUpdate: 'afterkeydown'" class="form-control" id="username" placeholder="Username">
+          </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <input type="email" class="form-control" data-bind="value: email" id="exampleInputEmail1" placeholder="Email">
+              </div>
+              <div class="form-group col-md-6">
+                <input type="email" class="form-control" data-bind="value: email2, " id="exampleInputEmail1" placeholder="Confirm Email">
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <input type="password" class="form-control" data-bind="value: pass" id="pass" placeholder="Password">
+              </div>
+              <div class="form-group col-md-6">
+                <input type="password" class="form-control" data-bind="value: pass2" id="pass2" placeholder="Confirm Password">
+              </div>
+            </div>
+          <div class="text-center">
+              <input type="checkbox" class="pretty-checkbox" data-bind="checked: tersmAndCond" id="termsandcond" placeholder="Email">
+              <label for="termsandcond">I have read the terms and conditions</label>
+          </div>
+            <div class="text-center">
+                <button class="btn btn-primary btn-transparent btn-lg text-center" data-bind="enable: submitable">Sign up</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!--
 <div class="container">
     <div class="jumbotron jumbotron-title">
         <h1 class="text-center">Welcome to <span class='rejoinder'>Rejoinder</span></h1>
@@ -11,6 +50,7 @@
         <p><a href="/auth" class="btn btn-primary btn-transparent">Sign up with Instagram</a></p>
     </div>
 </div>
+-->
 
 
 <% include ./partials/footer %>

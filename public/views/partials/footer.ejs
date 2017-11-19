@@ -3,12 +3,14 @@
 <script type="text/javascript" scr="/static/js/all.min.js"></script>
 
 <footer>
+    <% if(locals.name){%>
     <h3>Shortcuts</h3>
     <dl class="clearfix">
         <dt>Ctrl + L </dt><dd><i class="glyphicon glyphicon-arrow-right"></i>   Like</dd>
         <dt>Enter    </dt><dd><i class="glyphicon glyphicon-arrow-right"></i>  Submit Comment</dd>
         <dt>Ctrl + F </dt><dd><i class="glyphicon glyphicon-arrow-right"></i>  Follow User of Post (in development)</dd>
     </dl>
+    <%}%>
     <p class="text-center"></p>
     <p class="text-center text-muted">© Copyright 2017 Rejoinder  </p>
 </footer>
