@@ -13,6 +13,7 @@ const babel = require('gulp-babel');
 var paths = {
   scripts: [
       'bower_components/jquery/dist/jquery.js',
+      'bower_components/mark.js/dist/mark.js',
       'public/scripts/**/dist/*.min.js',
       'public/scripts/vendor/*.js',
       'public/scripts/utilities/*.js',

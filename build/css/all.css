@@ -10587,7 +10587,7 @@ body {
 }
 .main-content .main_container .ig-content-window {
   position: relative;
-  top: 25%;
+  top: 10%;
 }
 .jumbotron-title {
   background-color: transparent;
@@ -10780,7 +10780,6 @@ footer dt {
   font-weight: bold;
 }
 .post-container {
-  padding: 5px;
   border-radius: 6px;
   background-color: #7395ae;
   position: relative;
@@ -10881,7 +10880,7 @@ footer dt {
   }
 }
 .post-container .image-container img {
-  max-width: 100%;
+  max-width: 50%;
   max-height: 100%;
   display: block;
   margin: 0 auto;
@@ -10895,6 +10894,14 @@ footer dt {
 .post-container .side-details .comments {
   max-height: 15%;
   overflow-y: auto;
+  background-color: white;
+  border-color: whitesmoke;
+  padding: 15px;
+  word-wrap: break-word;
+  border-radius: 8px;
+  -webkit-box-shadow: inset 0px 0px 12px 2px rgba(156, 151, 156, 0.74);
+  -moz-box-shadow: inset 0px 0px 12px 2px rgba(156, 151, 156, 0.74);
+  box-shadow: inset 0px 0px 12px 2px rgba(156, 151, 156, 0.74);
 }
 .post-container .side-details .input-comments > * {
   margin: 3px 0px;
@@ -10902,6 +10909,8 @@ footer dt {
 .post-container .side-details .comment {
   height: 60%;
   top: 25%;
+  box-sizing: border-box;
+  height: 29vh;
 }
 .post-container .side-details .js-submit-comment {
   bottom: 2%;

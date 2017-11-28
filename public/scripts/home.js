@@ -72,7 +72,6 @@
                 var colorStepper = rej.numberToColorHsl(0),
                     widthStepper = i;
                 var interval = setInterval(() => {
-                    console.log(widthStepper);
                     if(widthStepper++ >= width){clearInterval(interval);}
                     $progress.css({
                         width:`${widthStepper}%`,
@@ -88,10 +87,40 @@
         }
 
         igPostHtml(postObj){
+            
+            let media = '';
+            //console.log(postObj);
+            let hashtags = postObj.caption
+                .split('#')
+                .map(h => {
+                    if(!h) return '';
+                    h = h.split(' ');
+                    if(h.length >= 1){
+                        return `<a href="#">#${h[0]}</a> ` + h.slice(1).join(' ');
+                    }
+                    return h.join(' ');
+            });//.join(' ');
+            
+            if(postObj.caption[0] != "#"){
+                hashtags[0] = postObj.caption.split('#')[0];
+            }
+            
+            hashtags = hashtags.join(' ');
+            
+            if(postObj.videos){
+               media = `
+                <video controls="false" width="${postObj.videos.standard_resolution.width}" height="${postObj.videos.standard_resolution.height}" loop>
+                  <source src="${postObj.videos.standard_resolution.url}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>`;
+            }else{
+                media = `<img src="${postObj.images.standard_resolution.url}" />`;
+            }
+            
             return `      
-                <div class="post-container hidden row">
+                <div class="post-container hidden row" data-postid="${postObj.id}">
                     <div class="image-container col-md-8">
-                        <img src="${postObj.imgSrc}" />
+                        ${media}
                         <div class="like">
                             <input type="checkbox" id="ig-liked"/>
                             <label for="ig-liked">
@@ -104,15 +133,24 @@
                     <div class="side-details col-md-4">
                         
                         <div class='input-comments'>
-                            <p class='comments'>${postObj.caption} </p>
+                            <div class='comments'>
+                                <p class="caption">${hashtags}</p>
+                            </div>
                             <textarea class='comment form-control'></textarea>
-                            <button class='btn btn-primary btn-transparent js-submit-comment'>Comment</button>
+                            
                         </div>
                     </div>
                 </div>`;
+            //<button class='btn btn-primary btn-transparent js-submit-comment'>Comment</button>
         }
 
         runCommenting(){
+            
+            if(this.$root.find('.post-container').length < 3){
+                //go grab more and append;
+            }
+            
+            this.updateQualityStick('');
             
             let $textArea = this.$currentPost.find('textarea');
             
@@ -122,8 +160,17 @@
             setTimeout(() => {
                 var postHeight = this.$currentPost.height();
 
-                this.$currentPost.find('.side-details .comments').css({"min-height":`${postHeight / 4}px`, "max-height": `${(postHeight / 3)}px` });
-                this.$currentPost.find('textarea').css("min-height",`${postHeight / 2}px`);
+                //this.$currentPost.find('.side-details .comments').css({"min-height":`${postHeight / 4}px`, "max-height": `${(postHeight / 3)}px` });
+                //this.$currentPost.find('textarea').css("min-height",`${postHeight / 2}px`);
+                
+                if(this.$currentPost.find('video').length){
+                    let videoEl = this.$currentPost.find('video')[0];
+                    videoEl.play();
+                    videoEl.controls = false;
+                    this.$currentPost.find('video').on('click', function(e) {
+                        this.paused ? this.play() : this.pause();
+                    });
+                }
                 
                 setTimeout(() => {
                     $textArea.focus();
@@ -157,7 +204,8 @@
         submitComment(comment){//animate this stuff;
             var $nextPost = this.$currentPost.next();
             this.$currentPost.remove();
-            this.$currentPost = $nextPost;            
+            this.$currentPost = $nextPost;  
+            this.$currentPost.removeClass('hidden');
             this.runCommenting();
             
             this.updateTicker();
@@ -184,7 +232,7 @@
                 setTimeout(() => {
                     tcl.remove();
                 },2000);
-            },50);
+            },0);
             
         }
 
@@ -195,21 +243,15 @@
 
             hashtags = hashtags.split(',').map(ht => `tag=${ht}`).join('&');
 
-            $.getJSON(`./api/user/tags?${hashtags}`)
+            $.getJSON(`./api/user/tags?${hashtags}&username=itcropper&password=TeCz1313`)
                 .done((data) => {
                     var $images = data.map(d => {
-                        return this.igPostHtml({
-                           imgSrc: d.images.highr,
-                           caption: d.caption
-                       });
+                        return this.igPostHtml(d);
                     });
-                    $contentRoot.html($images.join(''));
+                    $contentRoot.append($images.join(''));
 
                     this.preCommenting(this.runCommenting.bind(this));
 
-    //                $('.tag-contents').slick({
-    //                    variableWidth: true
-    //                });
                 })
 
         }

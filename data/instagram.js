@@ -9,7 +9,7 @@
     var endpoints = {
         getUser: (a) => `https://api.instagram.com/v1/users/self/?access_token=${a}`,
         findPostById: (id, a) => `https://api.instagram.com/v1/media/${id}?access_token=${a}`,
-        findMediaByTag: (tag, a) => `https://api.instagram.com/v1/tags/${tag}/media/recent?access_token=${a}`,
+        findMediaByTag: (tag, a, mintag=null) => `https://api.instagram.com/v1/tags/${tag}/media/recent?access_token=${a}&MIN_TAG_ID=${mintag}`,
         getUserRelationships: (uid, a) => `https://api.instagram.com/v1/users/${uid}/relationship?access_token=${a}`,
         getPostsByUser: (uid, a) => `https://api.instagram.com/v1/users/${uid}/media/recent/?access_token=${a}`
         
@@ -64,6 +64,7 @@
 
     exports.findByTags = function(req, callback){
         var tags = req.query.tag,
+            mintag = req.query.mintagid
             access_token = req.user.account_token;
         
         console.log('tags ---->', tags);
@@ -87,17 +88,17 @@
                     return res(data.map((m => {
                         return {
                             id: m.id,
-                            images: {
-                                lowr: m.images.low_resolution.url,
-                                highr: m.images.standard_resolution.url
-                            },
+                            images: m.images,
                             created_time: new Date(parseInt(m.created_time) * 1000),
                             author: {
                                 name: m.caption.from.full_name,
                                 username: m.caption.from.username
                             },
                             likes: m.likes,
-                            caption: m.caption.text
+                            caption: m.caption.text,
+                            videos: m.videos,
+                            location: m.location,
+                            tags: m.tags
                         };
                     })));
                 });
@@ -105,7 +106,7 @@
         }
         
         Promise
-        .all(tags.map(t => requestAsync(endpoints.findMediaByTag(t, access_token))))
+        .all(tags.map(t => requestAsync(endpoints.findMediaByTag(t, access_token, mintag))))
         .then(function(data) {
             var flattened = data.reduce((base, cur) => base.concat(...cur));
             var s = {};
