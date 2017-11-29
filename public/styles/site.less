@@ -1,8 +1,20 @@
-@color-main: #5d5c61;
-@color-secondary: #938e94;
-@color-tertiary: #7395ae;
-@color-quartiery: #e8a87c;
-@color-quitianary: #c38d9d;
+@color-main: #CAEBF2;
+@color-secondary: #A9A9A9;
+@color-tertiary: #FF383F;
+@color-quartiery: #EFEFEF;
+@color-quitianary: #B82601;
+
+
+//
+//@color-main: #072f4f;
+//@color-secondary: #000;
+//@color-tertiary: #813772;
+//@color-quartiery: #B82601;
+//@color-quitianary: #B82601;
+
+html, body, p, a, h1, h2, h3, h4, h5, textarea, input, label, div, span, article, aside, ul, li, ol {
+    font-family: 'Roboto', sans-serif;
+}
 
 html {
     height:100%;
@@ -14,7 +26,7 @@ body {
     background-color:@color-main;
 }
 
-.rejoinder {font-family: 'Marck Script', cursive; font-size: 7rem;}
+
 
 .main-navbar {
     width:100%;
@@ -23,14 +35,29 @@ body {
     z-index: 50;
     min-height:35px;
     
+    a, li a {
+        color:white;
+        &:hover {
+            background-color: transparent;
+            text-decoration: underline;
+        }
+    }
+    
     .navbar-header {
-        padding:20px;
+        padding: 5px 20px;
         width:100%;
     }
     
     .page-nav {
         
         .account-bar {
+            width:20%;
+            li {
+                margin-right:5rem;
+            }
+            .users-name {
+                color:white;
+            }
 
             .profile-img {
                 width: 60px;

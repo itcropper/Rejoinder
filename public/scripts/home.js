@@ -29,7 +29,7 @@
               console.log(vals);
             });
 
-            $('.bootstrap-tagsinput input').keyup(function(event){
+            $('.bootstrap-tagsinput input').keyup(function(event){//submit comment with "Enter"
               if(event.keyCode == 13){
                 _this.fillDashboard($('.js-hashtags').val());
               }
@@ -39,7 +39,13 @@
                 _this.fillDashboard($('.js-hashtags').val());
             });
             
-            $('body').on('keydown', (e) => {
+            $('body').on('keyup', (e) => {
+                if(e.metaKey || e.ctrlKey && (e.keyCode == 39 || e.keyCode == 78)){
+                    this.skipToNext();
+                }
+            });
+            
+            $('body').on('keydown', (e) => {//toggle like with ctrl+L
                if ((e.metaKey || e.ctrlKey) && e.keyCode === 76) {
                    e.preventDefault();
                    this.$currentPost.find('.like input').trigger('click');
@@ -118,26 +124,30 @@
             }
             
             return `      
-                <div class="post-container hidden row" data-postid="${postObj.id}">
-                    <div class="image-container col-md-8">
-                        ${media}
-                        <div class="like">
-                            <input type="checkbox" id="ig-liked"/>
-                            <label for="ig-liked">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M12 21.35l-1.45-1.32c-5.15-4.67-8.55-7.75-8.55-11.53 0-3.08 2.42-5.5 5.5-5.5 1.74 0 3.41.81 4.5 2.09 1.09-1.28 2.76-2.09 4.5-2.09 3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.4 6.86-8.55 11.54l-1.45 1.31z"/>
-                                </svg>
-                            </label>
+                <div class="post-row hidden row" data-postid="${postObj.id}">
+                    <div class="post-container col-md-10 col-md-offset-1" data-postid="${postObj.id}">
+                        <div class="image-container col-md-8">
+                            ${media}
                         </div>
-                    </div>
-                    <div class="side-details col-md-4">
-                        
-                        <div class='input-comments'>
-                            <div class='comments'>
-                                <p class="caption">${hashtags}</p>
+                        <div class="side-details col-md-4">
+
+                            <div class='input-comments'>
+                                <div class='text-wrapper'>
+                                    <p class="caption">${hashtags}</p>
+                                </div>
+                                <div class="text-wrapper comment-container">
+                                    <div class="like">
+                                        <input type="checkbox" id="ig-liked"/>
+                                        <label for="ig-liked">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M12 21.35l-1.45-1.32c-5.15-4.67-8.55-7.75-8.55-11.53 0-3.08 2.42-5.5 5.5-5.5 1.74 0 3.41.81 4.5 2.09 1.09-1.28 2.76-2.09 4.5-2.09 3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.4 6.86-8.55 11.54l-1.45 1.31z"/>
+                                            </svg>
+                                        </label>
+                                    </div>
+                                    <textarea class='comment'></textarea>
+                                </div>
+
                             </div>
-                            <textarea class='comment form-control'></textarea>
-                            
                         </div>
                     </div>
                 </div>`;
@@ -146,7 +156,7 @@
 
         runCommenting(){
             
-            if(this.$root.find('.post-container').length < 3){
+            if(this.$root.find('.post-row').length < 3){
                 //go grab more and append;
             }
             
@@ -154,7 +164,7 @@
             
             let $textArea = this.$currentPost.find('textarea');
             
-            this.$root.find('.hash-search').addClass('remove');
+            
             
             ///TODO: put something in the way here, then remove it when everything is in place.
             setTimeout(() => {
@@ -195,10 +205,29 @@
         }
         
         preCommenting(next){
-            this.$currentPost = this.$currentPost || this.$root.find('.ig-content-window').find('.post-container').first();
-            this.$therm.removeClass('hidden');
-            this.$currentPost.removeClass('hidden');///TODO: Animate these parts as well.
+            var _this = this;
+            this.$currentPost = this.$currentPost || this.$root.find('.ig-content-window').find('.post-row').first();
+            this.$root.find('.hash-search').fadeOut('fast', function() {
+                $(this).addClass('hidden');
+                
+                _this.$therm.fadeIn('fast', function(){
+                    $(this).removeClass('hidden');
+                    _this.$currentPost.fadeIn('fast', function(){
+                        $(this).removeClass('hidden');
+                    });
+                });
+            });
+            ///TODO: Animate these parts as well.
+            
             setTimeout(next, 1500);
+        }
+        
+        skipToNext() {
+            var $nextPost = this.$currentPost.next();
+            this.$currentPost.remove();
+            this.$currentPost = $nextPost;  
+            this.$currentPost.removeClass('hidden');
+            this.runCommenting();
         }
 
         submitComment(comment){//animate this stuff;
@@ -209,6 +238,7 @@
             this.runCommenting();
             
             this.updateTicker();
+            //send comment off to network
         }
         
         updateTicker(){
@@ -243,7 +273,7 @@
 
             hashtags = hashtags.split(',').map(ht => `tag=${ht}`).join('&');
 
-            $.getJSON(`./api/user/tags?${hashtags}&username=itcropper&password=TeCz1313`)
+            $.getJSON(`./api/user/tags?${hashtags}`)
                 .done((data) => {
                     var $images = data.map(d => {
                         return this.igPostHtml(d);

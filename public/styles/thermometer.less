@@ -1,4 +1,4 @@
-
+@import (reference) "site.less";
 .therm-container {
     color:white;
     #countdown-wrap {
@@ -23,7 +23,7 @@
     #glass {
       width: 100%;
       height: 20px;
-      background: #c7c7c7;
+      border:2px solid @color-secondary;
       border-radius: 10px;
       float: left;
       overflow: hidden;
@@ -32,7 +32,7 @@
     .progress {
       float: left;
       height: 20px;
-      background: #FF5D50;
+      background: @color-tertiary;
       z-index: 333;
       //border-radius: 5px;
     }

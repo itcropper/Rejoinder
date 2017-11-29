@@ -17,8 +17,9 @@
             
             <% if (locals.name) { %>
                 <ul class="account-bar nav navbar-nav pull-right">
+                    <li><h2 class="users-name"><%= locals.name %></h2></li>
+                    <li><h2 class="users-name"><small><%= locals.user_name %></small></h2></li>
                     <li><img class="profile-img" src="<%= locals.user_profile_img_url %>" /></li>
-                    <li><%= locals.user_name %></li>
                 </ul>
             <% } else{ %>
             <ul class="account-buttons nav navbar-nav pull-right">
