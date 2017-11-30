@@ -21,14 +21,20 @@
         
         login(e){
             e.preventDefault();
+            e.stopPropagation();
+            console.log(JSON.stringify({
+                    username: this.viewModel.username(),
+                    password: this.viewModel.pass()
+                }));
             $.ajax({
                 url: "/login",
                 method: "POST",
-                data: JSON.stringify({
+                data: {
                     username: this.viewModel.username(),
                     password: this.viewModel.pass()
-                })
+                }
             }).done(e => {
+                
                 if(e){
                     location.href = "/dashboard";
                 }

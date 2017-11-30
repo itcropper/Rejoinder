@@ -15,42 +15,42 @@
                 badUsername: ko.observable(false)
             };
             
-            this.viewModel.username.subscribe((nv) => {
-                
-                if(nv.replace(/\s+/g,"") != nv){
-                    this.viewModel.badUsername("Username cannot contain space characters."); 
-                    return;
-                }
-                
-                var ajax;
-                setTimeout(() => {
-                    if(ajax){
-                        ajax.abort();
-                        ajax = null;
-                    } else{
-                       ajax = $.ajax({
-                           url: "/api/user/checkusername/" + nv,
-                           method: "GET"
-                       }).done((e) => {
-                           console.log(e);
-                           if(e){
-                                this.viewModel.badUsername("That username is already taken. Please chose another one.");    
-                           }else{
-                               this.viewModel.badUsername(""); 
-                           }
-                           
-                       }).always(() => {
-                           ajax = null;
-                       });
-                    }
-                }, 500);
-            });
+//            this.viewModel.username.subscribe((nv) => {
+//                
+//                if(nv.replace(/\s+/g,"") != nv){
+//                    this.viewModel.badUsername("Username cannot contain space characters."); 
+//                    return;
+//                }
+//                
+//                var ajax;
+//                setTimeout(() => {
+//                    if(ajax){
+//                        ajax.abort();
+//                        ajax = null;
+//                    } else{
+//                       ajax = $.ajax({
+//                           url: "/api/user/checkusername/" + nv,
+//                           method: "GET"
+//                       }).done((e) => {
+//                           console.log(e);
+//                           if(e){
+//                                this.viewModel.badUsername("That username is already taken. Please chose another one.");    
+//                           }else{
+//                               this.viewModel.badUsername(""); 
+//                           }
+//                           
+//                       }).always(() => {
+//                           ajax = null;
+//                       });
+//                    }
+//                }, 500);
+//            });
             
-            this.viewModel.email2.subscribe((nv) => {
-                if(this.viewModel.email() != nv){
-                    this.viewModel.badEmail2('Emails do not match');
-                }
-            });
+//            this.viewModel.email2.subscribe((nv) => {
+//                if(this.viewModel.email() != nv){
+//                    this.viewModel.badEmail2('Emails do not match');
+//                }
+//            });
             
             this.viewModel.submitable = ko.computed(() => {
                return this.viewModel.tersmAndCond() &&
@@ -71,7 +71,7 @@
             e.preventDefault();
             
             $.ajax({
-                url: "/api/user/createUser",
+                url: "/signup",
                 method: "POST",
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify({
@@ -80,6 +80,9 @@
                     password: this.viewModel.pass()
                 })
             }).done((e) => {
+                if(e){
+                    location.href = "./dashboard";
+                }
                 console.log(e);
             })
             

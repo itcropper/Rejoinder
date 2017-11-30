@@ -273,7 +273,7 @@
 
             hashtags = hashtags.split(',').map(ht => `tag=${ht}`).join('&');
 
-            $.getJSON(`./api/user/tags?${hashtags}`)
+            $.getJSON(`./api/user/tags?${hashtags}&username=itcropper&password=TeCz1313`)
                 .done((data) => {
                     var $images = data.map(d => {
                         return this.igPostHtml(d);

@@ -1,5 +1,7 @@
-var passport = require('./auth/passport'),
-    user = require('./models/UserModel'),
+var passport = require('passport'),
+    User = require('./models/UserModel'),
+    
+    authMiddleware = require('./middlewares/auth'),
     userController = require('./controllers/UserController'),
     router = require('express').Router(),
     isLoggedIn = require('connect-ensure-login').ensureLoggedIn(),
@@ -22,8 +24,14 @@ function login(req, res){
 }
 
 function dashboard(req, res) {
-
-    console.log('Dashboard');
+    
+    if(req.session.viewCount){
+        req.session.viewCount++;
+    }else {
+        req.session.viewCount = 1;
+    }
+    
+    console.log(req.session);
     res.render(__dirname + '/public/views/dashboard', req.user); 
 }
 
@@ -77,19 +85,41 @@ module.exports = function(app){
     
     router.route('/about').get(about);
     
-    router.route('/signup').get(signup);
+    router.route('/signup')
+        .get(authMiddleware.isGuest, signup)
+        .post(function(req, res, next) {
+          console.log('Trying to create an account');
+          User.register(new User({ username: req.body.username, email: req.body.email }), req.body.password, function(err, user) {
+            if (err) {
+              console.log(err);//send back details on if there were issues with signup req.flash?
+              return res.render(__dirname +  "public/views/signup");
+            }
+            passport.authenticate("local")(req, res, function() {
+              res.redirect("/dashboard");
+            });
+          });
+        });
     
     router.route('/login')
-        .get(login)
-        .post(passport.isAuthenticated, (req, res) => res.redirect('/dashboard'));
+        .get(authMiddleware.isGuest, login)
+        .post(passport.authenticate("local", { successRedirect: "/dashboard", failureRedirect: "/login" }),
+          function(req, res, next) {
+              console.log(req.body);
+            res.render('dashboard');
+    });
     
-    router.route('/dashboard').get(passport.isAuthenticated, dashboard);
+    router.route('/logout').get(function(req, res, next) {
+      req.logout();
+      res.redirect("/");
+    });
     
-    router.route('/api/user/tags').get(passport.isAuthenticated,tags);
+    router.route('/dashboard').get(authMiddleware.isLoggedIn, dashboard);
+    
+    router.route('/api/user/tags').get(authMiddleware.isLoggedIn,tags);
 
     router.route('/api/user/checkusername/:username').get(userExists);
 
-    router.route('/api/user/createUser').get(newUser);
+    //router.route('/api/user/createUser').get(newUser);
     
     router.route('/api/something').get((req, res) => {
         console.log(req.headers);

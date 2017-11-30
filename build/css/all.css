@@ -10915,6 +10915,9 @@ footer dt {
     -moz-transform: scale(1.03);
   }
 }
+.post-row .post-container .image-container {
+  padding: 5%;
+}
 .post-row .post-container .image-container img {
   max-height: 100%;
   display: block;
